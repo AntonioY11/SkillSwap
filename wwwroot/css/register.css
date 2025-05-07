@@ -1,0 +1,37 @@
+.card {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #0077cc 0%, #1b6ec2 100%);
+    border-bottom: 0;
+}
+
+.form-floating input:focus {
+    border-color: #1b6ec2;
+    box-shadow: 0 0 0 0.25rem rgba(27, 110, 194, 0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0077cc 0%, #1b6ec2 100%);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #005fa3 0%, #165a9c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.link-primary {
+    color: #0077cc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-primary:hover {
+    text-decoration: underline;
+}

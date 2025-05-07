@@ -1,0 +1,88 @@
+# .NET Core build artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Visual Studio files
+.vs/
+.vscode/
+*.nupkg
+*.pfx
+*.snk
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.sdf
+*.opensdf
+*.svd
+*.cache
+*.log
+*.vssscc
+*.vsix
+
+# Rider / JetBrains IDE files
+.idea/
+*.sln.iml
+*.ipr
+*.iws
+
+# Visual Studio Code specific files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# NuGet
+packages/
+*.nupkg
+*.nuget.props
+*.nuget.targets
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Entity Framework
+Migrations/
+
+# Configuration files that might contain sensitive data
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+
+# Database files
+*.mdf
+*.ldf
+*.ndf
+*.db
+*.sqlite3
+
+# OS-specific files
+.DS_Store
+Thumbs.db
