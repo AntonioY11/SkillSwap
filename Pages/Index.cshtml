@@ -1,10 +1,82 @@
 ﻿@page
-@model IndexModel
+@model SkillSwap.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to SkillSwap</h1>
+    <p>A community platform for sharing and exchanging skills.</p>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Recent Posts</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentPosts != null && Model.RecentPosts.Any())
+                {
+                    <div class="list-group">
+                        @foreach (var post in Model.RecentPosts)
+                        {
+                            <a href="/Posts/Details?id=@post.Post_id" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">@post.Title</h5>
+                                </div>
+                                <p class="mb-1">
+                                    @if (!string.IsNullOrEmpty(post.Description))
+                                    {
+                                        @(post.Description.Length > 100 ? post.Description.Substring(0, 100) + "..." : post.Description)
+                                    }
+                                </p>
+                                <small>By @(post.User?.FullName ?? "Unknown")</small>
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No recent posts available. Be the first to share your skills!</p>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>How It Works</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <i class="bi bi-pencil-square me-2"></i> Create a post about a skill you want to share
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-search me-2"></i> Browse posts to find skills you want to learn
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-chat-dots me-2"></i> Request to connect with skill providers
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-arrow-left-right me-2"></i> Exchange skills and learn from each other
+                    </li>
+                </ul>
+                
+                <div class="d-grid gap-2 mt-3">
+                    <a href="/Posts/Index" class="btn btn-primary">Browse All Posts</a>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a href="/Posts/Create" class="btn btn-outline-primary">Create a Post</a>
+                    }
+                    else
+                    {
+                        <a href="/Account/Register" class="btn btn-outline-primary">Join Now</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

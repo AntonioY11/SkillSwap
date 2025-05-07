@@ -23,6 +23,12 @@ namespace SkillSwap.Data
             modelBuilder.Entity<Post>().ToTable("Posts");
             modelBuilder.Entity<Request>().ToTable("Request");
             
+            // Configure nullable string properties
+            modelBuilder.Entity<Post>()
+                .Property(p => p.Description).IsRequired(false);
+            modelBuilder.Entity<Post>()
+                .Property(p => p.Image).IsRequired(false);
+            
             // Configure relationships
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)
