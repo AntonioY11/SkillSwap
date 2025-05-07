@@ -1,0 +1,116 @@
+@page
+@model SkillSwap.Pages.Posts.PostRequestsModel
+@{
+    ViewData["Title"] = "Post Requests";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Requests for: @Model.Post.Title</h2>
+                <a asp-page="./MyPosts" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Back to My Posts
+                </a>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (Model.Requests.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Requester</th>
+                                <th>Email</th>
+                                <th>Message</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var request in Model.Requests)
+                            {
+                                <tr>
+                                    <td>@request.User.FullName</td>
+                                    <td>@request.User.Email</td>
+                                    <td>
+                                        @if (request.Comment?.Length > 50)
+                                        {
+                                            @(request.Comment.Substring(0, 50) + "...")
+                                            <button type="button" class="btn btn-link p-0" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#messageModal-@request.Request_id">
+                                                Read More
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            @request.Comment
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge @Model.GetStatusBadgeClass(request.Status)">
+                                            @Model.GetStatusText(request.Status)
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (request.Status == null)
+                                        {
+                                            <div class="btn-group">
+                                                <form method="post" asp-page-handler="UpdateStatus" 
+                                                      asp-route-requestId="@request.Request_id" 
+                                                      asp-route-status="true" class="me-2">
+                                                    <button type="submit" class="btn btn-sm btn-success">
+                                                        Accept
+                                                    </button>
+                                                </form>
+                                                <form method="post" asp-page-handler="UpdateStatus" 
+                                                      asp-route-requestId="@request.Request_id" 
+                                                      asp-route-status="false">
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        Reject
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+
+                                <!-- Message Modal -->
+                                <div class="modal fade" id="messageModal-@request.Request_id" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Message from @request.User.FullName</h5>
+                                                <button type="button" class="btn-close" 
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>@request.Comment</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No requests have been made for this post yet.
+                </div>
+            }
+        </div>
+    </div>
+</div>

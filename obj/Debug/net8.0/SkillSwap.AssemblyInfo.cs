@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SkillSwap")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc9181c97de03ccfcf999958a2e20a977ed0dccd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ebbe92b51ec4cd23c7c6cc316212692f1cf480e")]
 [assembly: System.Reflection.AssemblyProductAttribute("SkillSwap")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SkillSwap")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
