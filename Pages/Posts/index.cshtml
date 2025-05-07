@@ -1,0 +1,164 @@
+@page
+@model SkillSwap.Pages.Posts.IndexModel
+@{
+    ViewData["Title"] = "Browse Posts";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Browse All Posts</h2>
+
+    <!-- Search and Filter Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" asp-for="SearchTerm" placeholder="Search by title or description...">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" asp-for="SortBy" onchange="this.form.submit()">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="title">By Title</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex justify-content-end">
+                    @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                    {
+                        <a asp-page="./Index" class="btn btn-outline-secondary">Clear Filters</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Top Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation" class="mb-4">
+            <ul class="pagination">
+                @if (Model.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber - 1)" 
+                           asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="@Model.SortBy">Previous</a>
+                    </li>
+                }
+
+                @for (int i = Math.Max(1, Model.PageNumber - 2); i <= Math.Min(Model.TotalPages, Model.PageNumber + 2); i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" asp-page="./Index" asp-route-pageNumber="@i" 
+                           asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="@Model.SortBy">@i</a>
+                    </li>
+                }
+
+                @if (Model.PageNumber < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber + 1)" 
+                           asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="@Model.SortBy">Next</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+
+    <!-- Results Summary -->
+    <div class="mb-3">
+        @if (!string.IsNullOrEmpty(Model.SearchTerm))
+        {
+            <p class="text-muted">
+                Showing results for "<strong>@Model.SearchTerm</strong>" - 
+                @Model.TotalPostCount post@(Model.TotalPostCount != 1 ? "s" : "") found
+            </p>
+        }
+        else
+        {
+            <p class="text-muted">
+                Showing @(((Model.PageNumber - 1) * Model.PostsPerPage) + 1)-@(Math.Min(Model.PageNumber * Model.PostsPerPage, Model.TotalPostCount)) 
+                of @Model.TotalPostCount post@(Model.TotalPostCount != 1 ? "s" : "")
+            </p>
+        }
+    </div>
+
+    <!-- Posts Grid -->
+    @if (Model.Posts.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var post in Model.Posts)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrEmpty(post.Image))
+                        {
+                            <img src="@post.Image" class="card-img-top" alt="@post.Title">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@post.Title</h5>
+                            <p class="card-text">
+                                @if (!string.IsNullOrEmpty(post.Description))
+                                {
+                                    @(post.Description.Length > 100 ? post.Description.Substring(0, 100) + "..." : post.Description)
+                                }
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Posted by @(post.User?.FullName ?? "Unknown")</small>
+                            <a asp-page="./Details" asp-route-id="@post.Post_id" class="btn btn-sm btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            No posts found. @(string.IsNullOrEmpty(Model.SearchTerm) ? "" : "Try a different search term.")
+        </div>
+    }
+
+    <!-- Bottom Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                @if (Model.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-page="./Index" asp-route-pageNumber="1" 
+                           asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="@Model.SortBy">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber - 1)" 
+                           asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="@Model.SortBy">Previous</a>
+                    </li>
+                }
+
+                @for (int i = Math.Max(1, Model.PageNumber - 2); i <= Math.Min(Model.TotalPages, Model.PageNumber + 2); i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" asp-page="./Index" asp-route-pageNumber="@i" 
+                           asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="@Model.SortBy">@i</a>
+                    </li>
+                }
+
+                @if (Model.PageNumber < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber + 1)" 
+                           asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="@Model.SortBy">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-page="./Index" asp-route-pageNumber="@Model.TotalPages" 
+                           asp-route-searchTerm="@Model.SearchTerm" asp-route-sortBy="@Model.SortBy">Last</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>

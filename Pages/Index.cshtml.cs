@@ -23,17 +23,18 @@ namespace SkillSwap.Pages
         {
             try
             {
-                // Order by Post_id instead of CreatedAt since we don't have that field
+                // Try to display some recent posts, but don't crash if DB isn't ready
                 RecentPosts = await _context.Posts
+                    .AsNoTracking()  // For performance
                     .Include(p => p.User)
-                    .OrderByDescending(p => p.Post_id)  // Use Post_id to get newest posts
+                    .OrderByDescending(p => p.Post_id)
                     .Take(5)
                     .ToListAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error loading recent posts");
-                // If there's an error, we'll have an empty list (already initialized)
+                RecentPosts = new List<Post>();  // Empty list if DB access fails
             }
         }
     }

@@ -11,12 +11,13 @@ builder.Services.AddRazorPages();
 // Get connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Add DbContext with MySQL - fixed version
+// Configure MySQL with correct version specification
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    var serverVersion = ServerVersion.AutoDetect(connectionString);
-    options.UseMySql(connectionString, serverVersion);
-});
+    options.UseMySql(connectionString, 
+        ServerVersion.AutoDetect(connectionString),
+        mySqlOptions => mySqlOptions.EnableRetryOnFailure()
+    )
+);
 
 // Add authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

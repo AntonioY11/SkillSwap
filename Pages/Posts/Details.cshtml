@@ -1,0 +1,82 @@
+
+@page
+@model SkillSwap.Pages.Posts.DetailsModel
+@{
+    ViewData["Title"] = Model.Post?.Title ?? "Post Details";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            @if (Model.Post != null)
+            {
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                        <li class="breadcrumb-item"><a asp-page="./Index">Posts</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Post.Title</li>
+                    </ol>
+                </nav>
+
+                <div class="card mb-4 shadow">
+                    @if (!string.IsNullOrEmpty(Model.Post.Image))
+                    {
+                        <img src="@Model.Post.Image" class="card-img-top" alt="@Model.Post.Title">
+                    }
+                    <div class="card-body">
+                        <h1 class="card-title mb-3">@Model.Post.Title</h1>
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" 
+                                 style="width: 40px; height: 40px;">
+                                <span>@(Model.Post.User?.FullName.Substring(0, 1) ?? "?")</span>
+                            </div>
+                            <div>
+                                <p class="mb-0">Posted by <strong>@(Model.Post.User?.FullName ?? "Unknown")</strong></p>
+                            </div>
+                        </div>
+                        
+                        <div class="card-text mb-4">
+                            @if (!string.IsNullOrEmpty(Model.Post.Description))
+                            {
+                                <p>@Model.Post.Description</p>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No description provided.</p>
+                            }
+                        </div>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="d-grid gap-2">
+                                <a href="#" class="btn btn-primary">Request to Exchange Skills</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Please <a asp-page="/Account/Login">login</a> to request an exchange with this user.
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mb-4">
+                    <a asp-page="./Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Posts
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    <h4 class="alert-heading">Post Not Found</h4>
+                    <p>The post you're looking for does not exist or has been removed.</p>
+                    <hr>
+                    <a asp-page="./Index" class="btn btn-outline-danger">Browse all posts</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
