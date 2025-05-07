@@ -1,0 +1,96 @@
+@page
+@model SkillSwap.Pages.Posts.MyPostsModel
+@{
+    ViewData["Title"] = "My Posts";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Posts</h2>
+        <a asp-page="./Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Create New Post
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model.UserPosts.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var post in Model.UserPosts)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrEmpty(post.Image))
+                        {
+                            <img src="@post.Image" class="card-img-top" alt="@post.Title">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@post.Title</h5>
+                            <p class="card-text">
+                                @if (!string.IsNullOrEmpty(post.Description))
+                                {
+                                    @(post.Description.Length > 100 ? post.Description.Substring(0, 100) + "..." : post.Description)
+                                }
+                            </p>
+                            <div class="mb-2">
+                                <span class="badge bg-info">
+                                    <i class="bi bi-chat-dots me-1"></i>
+                                    @post.Requests.Count Requests
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a asp-page="./Details" asp-route-id="@post.Post_id" 
+                                       class="btn btn-sm btn-outline-primary">View</a>
+                                    <a asp-page="./Edit" asp-route-id="@post.Post_id" 
+                                       class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            onclick="confirmDelete(@post.Post_id)">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <form id="deleteForm" method="post" asp-page-handler="Delete">
+            <input type="hidden" id="postIdToDelete" name="id" value="" />
+        </form>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            You haven't created any posts yet. Click the "Create New Post" button to get started!
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete(postId) {
+            if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+                document.getElementById('postIdToDelete').value = postId;
+                document.getElementById('deleteForm').submit();
+            }
+        }
+    </script>
+}
