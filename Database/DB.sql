@@ -7,7 +7,9 @@ CREATE TABLE User (
     User_id INT PRIMARY KEY AUTO_INCREMENT,
     FullName VARCHAR(255) NOT NULL,
     Email VARCHAR(255) UNIQUE NOT NULL,
-    Password VARCHAR(255) NOT NULL
+    Password VARCHAR(255) NOT NULL,
+    Bio Text,
+    ProfilePicture VARCHAR(255)
 );
 
 -- Create Posts table

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace SkillSwap.Models
 {
@@ -8,22 +9,24 @@ namespace SkillSwap.Models
     {
         [Key]
         public int User_id { get; set; }
-        
+
         [Required]
         [StringLength(255)]
-        public string FullName { get; set; }
-        
+        public string FullName { get; set; } = string.Empty;
+
         [Required]
         [StringLength(255)]
-        [EmailAddress]
-        public string Email { get; set; }
-        
+        public string Email { get; set; } = string.Empty;
+
         [Required]
         [StringLength(255)]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
         
-        // Navigation properties
-        public virtual ICollection<Post> Posts { get; set; }
-        public virtual ICollection<Request> Requests { get; set; }
+        public string? Bio { get; set; }
+        
+        public string? ProfilePicture { get; set; }
+        
+        public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+        public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
     }
 }

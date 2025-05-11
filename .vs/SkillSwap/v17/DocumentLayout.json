@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\User\\Documents\\i3332\\SkillSwap\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C03BE10E-9C36-48B6-9A72-752CDF52E651}|SkillSwap.csproj|c:\\users\\user\\documents\\i3332\\skillswap\\pages\\account\\profile.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C03BE10E-9C36-48B6-9A72-752CDF52E651}|SkillSwap.csproj|solutionrelative:pages\\account\\profile.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C03BE10E-9C36-48B6-9A72-752CDF52E651}|SkillSwap.csproj|c:\\users\\user\\documents\\i3332\\skillswap\\pages\\posts\\postrequests.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{C03BE10E-9C36-48B6-9A72-752CDF52E651}|SkillSwap.csproj|solutionrelative:pages\\posts\\postrequests.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C03BE10E-9C36-48B6-9A72-752CDF52E651}|SkillSwap.csproj|c:\\users\\user\\documents\\i3332\\skillswap\\services\\viewdataaccessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C03BE10E-9C36-48B6-9A72-752CDF52E651}|SkillSwap.csproj|solutionrelative:services\\viewdataaccessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C03BE10E-9C36-48B6-9A72-752CDF52E651}|SkillSwap.csproj|c:\\users\\user\\documents\\i3332\\skillswap\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,19 +31,45 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Profile.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\i3332\\SkillSwap\\Pages\\Account\\Profile.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\Account\\Profile.cshtml.cs",
+              "ToolTip": "C:\\Users\\User\\Documents\\i3332\\SkillSwap\\Pages\\Account\\Profile.cshtml.cs",
+              "RelativeToolTip": "Pages\\Account\\Profile.cshtml.cs",
+              "ViewState": "AgIAAJgAAAAAAAAAAAAkwI8AAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T14:35:59.331Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ViewDataAccessor.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\i3332\\SkillSwap\\Services\\ViewDataAccessor.cs",
+              "RelativeDocumentMoniker": "Services\\ViewDataAccessor.cs",
+              "ToolTip": "C:\\Users\\User\\Documents\\i3332\\SkillSwap\\Services\\ViewDataAccessor.cs",
+              "RelativeToolTip": "Services\\ViewDataAccessor.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAAC0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T14:09:51.3Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "PostRequests.cshtml",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\i3332\\SkillSwap\\Pages\\Posts\\PostRequests.cshtml",
               "RelativeDocumentMoniker": "Pages\\Posts\\PostRequests.cshtml",
               "ToolTip": "C:\\Users\\User\\Documents\\i3332\\SkillSwap\\Pages\\Posts\\PostRequests.cshtml",
               "RelativeToolTip": "Pages\\Posts\\PostRequests.cshtml",
-              "ViewState": "AgIAAFMAAAAAAAAAAAAIwFcAAAA+AAAAAAAAAA==",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAIwFUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-05-07T17:04:46.637Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\i3332\\SkillSwap\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
