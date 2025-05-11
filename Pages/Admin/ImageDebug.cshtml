@@ -1,0 +1,45 @@
+@page
+@model SkillSwap.Pages.Admin.ImageDebugModel
+@{
+    ViewData["Title"] = "Image Debug";
+}
+
+<div class="container mt-4">
+    <h2>Image Upload Diagnostics</h2>
+    
+    <div class="alert alert-info">
+        <strong>Uploads Directory:</strong> @Model.UploadsDirectory
+        <br />
+        <strong>Directory Exists:</strong> @Model.DirectoryExists
+        <br />
+        <strong>Web Root Path:</strong> @Model.WebRootPath
+    </div>
+    
+    <h3>Recent Uploads</h3>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Size</th>
+                    <th>Last Modified</th>
+                    <th>Preview</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model.UploadedFiles)
+                {
+                    <tr>
+                        <td>@file.Name</td>
+                        <td>@file.Size bytes</td>
+                        <td>@file.LastModified</td>
+                        <td>
+                            <img src="/uploads/@file.Name" style="max-height: 50px;" 
+                                 onerror="this.onerror=null;this.src='/images/image-not-found.png';" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+@model string
+
+@if (!string.IsNullOrEmpty(Model))
+{
+    <div class="mb-3">
+        <p class="small text-muted">Image URL: @Model</p>
+        <img src="@Model" class="img-fluid rounded" alt="Post image" 
+             onerror="this.onerror=null;this.src='/images/image-not-found.png';this.classList.add('border','border-danger');" />
+    </div>
+}
+else
+{
+    <div class="alert alert-info">No image provided</div>
+}

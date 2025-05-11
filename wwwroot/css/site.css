@@ -20,3 +20,23 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Add custom styling for file inputs */
+.form-control[type=file] {
+  padding: 0.375rem 0.75rem;
+  cursor: pointer;
+}
+
+.form-control[type=file]::-webkit-file-upload-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  margin-right: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.img-thumbnail {
+  max-height: 200px;
+  width: auto;
+}

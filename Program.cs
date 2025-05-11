@@ -48,6 +48,13 @@ builder.Services.AddScoped<PasswordHasher<object>>();
 
 var app = builder.Build();
 
+// Ensure uploads directory exists
+var uploadsDir = Path.Combine(builder.Environment.WebRootPath, "uploads");
+if (!Directory.Exists(uploadsDir))
+{
+    Directory.CreateDirectory(uploadsDir);
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

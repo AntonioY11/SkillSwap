@@ -28,7 +28,10 @@
                 <div class="card shadow-sm">
                     @if (!string.IsNullOrEmpty(Model.Post.Image))
                     {
-                        <img src="@Model.Post.Image" class="card-img-top" alt="@Model.Post.Title">
+                        <div class="text-center mb-3">
+                            <img src="@Model.Post.Image" class="img-fluid rounded" alt="@Model.Post.Title"
+                                 onerror="this.onerror=null;this.src='/images/image-not-found.png';this.classList.add('border','border-danger');" />
+                        </div>
                     }
                     <div class="card-body">
                         <h2 class="card-title">@Model.Post.Title</h2>
