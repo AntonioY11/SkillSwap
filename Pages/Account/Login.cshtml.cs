@@ -81,8 +81,8 @@ namespace SkillSwap.Pages.Account
 
                             var authProperties = new AuthenticationProperties
                             {
-                                IsPersistent = true,
-                                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
+                                IsPersistent = false,
+                                //ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
                             };
 
                             await HttpContext.SignInAsync(
