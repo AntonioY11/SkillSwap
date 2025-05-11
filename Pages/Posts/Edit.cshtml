@@ -1,0 +1,73 @@
+@page
+@model SkillSwap.Pages.Posts.EditModel
+@{
+    ViewData["Title"] = "Edit Post";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            @if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center font-weight-light my-2">Edit Post</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Post.Post_id" />
+                        <input type="hidden" asp-for="Post.User_id" />
+                        <input type="hidden" asp-for="Post.Image" />
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Post.Title" class="form-control" placeholder="Title" required />
+                            <label asp-for="Post.Title">Title</label>
+                            <span asp-validation-for="Post.Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Post.Description" class="form-control" 
+                                    style="height: 150px" placeholder="Description" required></textarea>
+                            <label asp-for="Post.Description">Description</label>
+                            <span asp-validation-for="Post.Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageFile" class="form-label">Replace Image (Optional)</label>
+                            <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            <div class="form-text">Supported formats: JPG, PNG, GIF (max 5MB)</div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Post.Image))
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Current Image</label>
+                                <div>
+                                    <img src="@Model.Post.Image" class="img-thumbnail" style="max-width: 200px" />
+                                </div>
+                            </div>
+                        }
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+                            <a asp-page="./MyPosts" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
