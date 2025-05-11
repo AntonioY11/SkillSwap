@@ -97,33 +97,27 @@ app.Use(async (HttpContext context, Func<Task> next) =>
             var userIdClaim = context.User.FindFirst("UserId");
             if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
             {
-                // Get user from database to check for profile picture
+                // Get user from database to check for profile picture - use AsNoTracking for read-only operations
                 using var scope = app.Services.CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                var user = await dbContext.Users.FirstOrDefaultAsync(u => u.User_id == userId);
+                var user = await dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.User_id == userId);
                 
                 if (user != null)
                 {
-                    // Ensure default image path is correct and consistent
-                    var defaultImagePath = "/images/default-avatar.png";
+                    // Add user info to context items
+                    context.Items["UserInitials"] = !string.IsNullOrEmpty(user.FullName) ? 
+                        user.FullName.Substring(0, 1).ToUpper() : "?";
                     
-                    // Set profile picture URL or default image
-                    var profilePicUrl = !string.IsNullOrEmpty(user.ProfilePicture) 
-                        ? user.ProfilePicture 
-                        : defaultImagePath;
-                        
-                    // Make sure the profile picture exists, if not, use default
-                    if (profilePicUrl != defaultImagePath)
+                    // Set profile picture URL with cache-busting timestamp
+                    if (!string.IsNullOrEmpty(user.ProfilePicture))
                     {
-                        var imagePath = Path.Combine(app.Environment.WebRootPath, profilePicUrl.TrimStart('/'));
-                        if (!System.IO.File.Exists(imagePath))
-                        {
-                            profilePicUrl = defaultImagePath;
-                        }
+                        var timestamp = DateTime.UtcNow.Ticks;
+                        context.Items["UserProfilePic"] = $"{user.ProfilePicture}?v={timestamp}";
                     }
-                    
-                    // Add to HttpContext.Items for the layout to access
-                    context.Items["UserProfilePic"] = profilePicUrl;
+                    else
+                    {
+                        context.Items["UserProfilePic"] = null;
+                    }
                 }
             }
         }
@@ -131,8 +125,11 @@ app.Use(async (HttpContext context, Func<Task> next) =>
         {
             // Log but continue - don't want to break the entire site over a profile picture
             var logger = app.Services.GetRequiredService<ILogger<Program>>();
-            logger.LogError(ex, "Error retrieving user profile picture");
-            context.Items["UserProfilePic"] = "/images/default-avatar.png";
+            logger.LogError(ex, "Error retrieving user profile information");
+            
+            // Default values
+            context.Items["UserInitials"] = "?";
+            context.Items["UserProfilePic"] = null;
         }
     }
     

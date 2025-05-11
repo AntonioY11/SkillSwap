@@ -37,9 +37,20 @@
                         <h2 class="card-title">@Model.Post.Title</h2>
                         
                         <div class="d-flex align-items-center mb-4">
-                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" 
-                                 style="width: 40px; height: 40px;">
-                                <span>@(Model.Post.User?.FullName.Substring(0, 1) ?? "?")</span>
+                            <div class="me-2" style="width: 40px; height: 40px;">
+                                @if (!string.IsNullOrEmpty(Model.Post.User?.ProfilePicture))
+                                {
+                                    <img src="@Model.Post.User.ProfilePicture" 
+                                         class="rounded-circle w-100 h-100" 
+                                         style="object-fit: cover; border: 2px solid #e9ecef;"
+                                         alt="@Model.Post.User.FullName" />
+                                }
+                                else
+                                {
+                                    <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center w-100 h-100">
+                                        <span>@(Model.Post.User?.FullName.Substring(0, 1).ToUpper() ?? "?")</span>
+                                    </div>
+                                }
                             </div>
                             <div>
                                 <p class="mb-0">Posted by <strong>@(Model.Post.User?.FullName ?? "Unknown")</strong></p>

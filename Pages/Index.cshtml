@@ -31,7 +31,24 @@
                                         @(post.Description.Length > 100 ? post.Description.Substring(0, 100) + "..." : post.Description)
                                     }
                                 </p>
-                                <small>By @(post.User?.FullName ?? "Unknown")</small>
+                                <div class="d-flex align-items-center">
+                                    <div style="width: 20px; height: 20px; margin-right: 8px;">
+                                        @if (!string.IsNullOrEmpty(post.User?.ProfilePicture))
+                                        {
+                                            <img src="@post.User.ProfilePicture" 
+                                                 class="rounded-circle w-100 h-100" 
+                                                 style="object-fit: cover;" 
+                                                 alt="@post.User.FullName" />
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center w-100 h-100" style="font-size: 10px;">
+                                                <span>@(post.User?.FullName.Substring(0, 1).ToUpper() ?? "?")</span>
+                                            </div>
+                                        }
+                                    </div>
+                                    <small>By @(post.User?.FullName ?? "Unknown")</small>
+                                </div>
                             </a>
                         }
                     </div>

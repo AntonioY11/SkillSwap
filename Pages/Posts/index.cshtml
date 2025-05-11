@@ -106,7 +106,24 @@
                             </p>
                         </div>
                         <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                            <small class="text-muted">Posted by @(post.User?.FullName ?? "Unknown")</small>
+                            <div class="d-flex align-items-center">
+                                <div style="width: 24px; height: 24px; margin-right: 8px;">
+                                    @if (!string.IsNullOrEmpty(post.User?.ProfilePicture))
+                                    {
+                                        <img src="@post.User.ProfilePicture" 
+                                             class="rounded-circle w-100 h-100" 
+                                             style="object-fit: cover;" 
+                                             alt="@post.User.FullName" />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center w-100 h-100" style="font-size: 12px;">
+                                            <span>@(post.User?.FullName.Substring(0, 1).ToUpper() ?? "?")</span>
+                                        </div>
+                                    }
+                                </div>
+                                <small class="text-muted">Posted by @(post.User?.FullName ?? "Unknown")</small>
+                            </div>
                             <a asp-page="./Details" asp-route-id="@post.Post_id" class="btn btn-sm btn-outline-primary">View Details</a>
                         </div>
                     </div>

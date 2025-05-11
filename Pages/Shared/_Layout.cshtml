@@ -38,12 +38,22 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item dropdown">
+                                @{
+                                    string userProfilePic = Context.Items["UserProfilePic"] as string;
+                                    string userInitials = Context.Items["UserInitials"] as string ?? "?";
+                                }
                                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @{
-                                        string userProfilePic = Context.Items["UserProfilePic"] as string ?? "/images/default-avatar.png";
-                                    }
-                                    <div class="me-2 profile-pic-small rounded-circle" 
-                                         style="background-image: url('@userProfilePic'); width: 32px; height: 32px; background-size: cover; background-position: center;">
+                                    <div class="me-2 profile-pic-small rounded-circle">
+                                        @if (!string.IsNullOrEmpty(userProfilePic))
+                                        {
+                                            <img src="@userProfilePic" alt="@User.Identity.Name" class="w-100 h-100" style="object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white">
+                                                @userInitials
+                                            </div>
+                                        }
                                     </div>
                                     <span class="d-none d-md-inline">@User.Identity.Name</span>
                                 </a>

@@ -41,14 +41,35 @@ body {
   width: auto;
 }
 
-/* Add to your existing site.css */
+/* Update the profile-pic-small class to enforce strict dimensions */
 .profile-pic-small {
+  width: 32px !important; /* Force small size with !important */
+  height: 32px !important; /* Force small size with !important */
+  min-width: 32px;
+  min-height: 32px;
+  max-width: 32px;
+  max-height: 32px;
   border: 2px solid #e9ecef;
-  background-color: #f8f9fa;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.profile-pic-small img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover; /* This ensures the image fills the container properly */
+}
+
+.profile-pic-small div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .profile-pic-small i {
@@ -78,4 +99,60 @@ body {
 
 .dropdown-item:active i {
   color: white;
+}
+
+/* Profile image consistency */
+.profile-image {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+}
+
+.profile-image-placeholder {
+  width: 180px;
+  height: 180px;
+  font-size: 4rem;
+  border: 5px solid #e9ecef;
+}
+
+/* User avatar styling for consistency */
+.user-avatar-sm {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+.user-avatar-md {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e9ecef;
+  overflow: hidden;
+}
+
+.user-avatar-sm img,
+.user-avatar-md img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-avatar-sm .initial,
+.user-avatar-md .initial {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bs-primary);
+  color: white;
+  font-weight: bold;
+}
+
+.user-avatar-sm .initial {
+  font-size: 12px;
+}
+
+.user-avatar-md .initial {
+  font-size: 16px;
 }

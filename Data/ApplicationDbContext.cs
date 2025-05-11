@@ -25,6 +25,10 @@ namespace SkillSwap.Data
             modelBuilder.Entity<Request>().ToTable("Request");
             
             // Configure nullable string properties
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(p => p.Bio).IsRequired(false);
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(p => p.ProfilePicture).IsRequired(false);
             modelBuilder.Entity<Post>()
                 .Property(p => p.Description).IsRequired(false);
             modelBuilder.Entity<Post>()

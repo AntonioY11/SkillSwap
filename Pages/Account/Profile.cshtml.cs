@@ -7,6 +7,10 @@ using SkillSwap.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using MySqlConnector;
+using System.ComponentModel.DataAnnotations;
 
 namespace SkillSwap.Pages.Account
 {
@@ -39,17 +43,17 @@ namespace SkillSwap.Pages.Account
         public class ProfileViewModel
         {
             public int UserId { get; set; }
+            
+            [Required(ErrorMessage = "Name is required")]
+            [StringLength(255, ErrorMessage = "Name cannot exceed 255 characters")]
             public string FullName { get; set; }
+            
             public string Email { get; set; }
-            public string Bio { get; set; }
-            public string ProfileImageUrl { get; set; }
             
-            // Current password is required to change email or password
-            public string CurrentPassword { get; set; }
+            // Make Bio explicitly nullable
+            public string? Bio { get; set; }
             
-            // Optional - only required if user wants to change password
-            public string NewPassword { get; set; }
-            public string ConfirmPassword { get; set; }
+            public string? ProfileImageUrl { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -82,87 +86,127 @@ namespace SkillSwap.Pages.Account
                 return Page();
             }
 
-            var userId = int.Parse(User.FindFirst("UserId")?.Value ?? 
-                throw new InvalidOperationException("User ID not found"));
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.User_id == userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            // Update the basic info
-            user.FullName = UserProfile.FullName;
-            user.Bio = UserProfile.Bio;
-
-            // Handle profile image upload if provided
-            if (ProfileImage != null && ProfileImage.Length > 0)
-            {
-                // Validate file size (2MB max)
-                if (ProfileImage.Length > 2 * 1024 * 1024)
-                {
-                    ModelState.AddModelError("ProfileImage", "Profile picture cannot exceed 2MB");
-                    return Page();
-                }
-
-                // Validate file type
-                var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif" };
-                if (!allowedTypes.Contains(ProfileImage.ContentType.ToLower()))
-                {
-                    ModelState.AddModelError("ProfileImage", "Only JPG, PNG and GIF files are allowed");
-                    return Page();
-                }
-
-                // Delete the old image if it exists
-                if (!string.IsNullOrEmpty(user.ProfilePicture))
-                {
-                    var oldImagePath = Path.Combine(_environment.WebRootPath, user.ProfilePicture.TrimStart('/'));
-                    if (System.IO.File.Exists(oldImagePath))
-                    {
-                        System.IO.File.Delete(oldImagePath);
-                    }
-                }
-
-                // Save the new profile picture
-                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "profiles");
-                Directory.CreateDirectory(uploadsFolder); // Ensure folder exists
-
-                var uniqueFileName = $"profile_{userId}_{Guid.NewGuid().ToString().Substring(0, 8)}{Path.GetExtension(ProfileImage.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await ProfileImage.CopyToAsync(fileStream);
-                }
-
-                // Update the profile picture URL
-                user.ProfilePicture = $"/uploads/profiles/{uniqueFileName}";
-            }
-
             try
             {
-                await _context.SaveChangesAsync();
-                
-                // Update the name claim if it changed
-                if (user.FullName != User.FindFirst(ClaimTypes.Name)?.Value)
-                {
-                    var identity = new ClaimsIdentity(User.Identity);
-                    identity.RemoveClaim(User.FindFirst(ClaimTypes.Name));
-                    identity.AddClaim(new Claim(ClaimTypes.Name, user.FullName));
+                var userId = int.Parse(User.FindFirst("UserId")?.Value ?? 
+                    throw new InvalidOperationException("User ID not found"));
                     
-                    await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(identity),
-                        new AuthenticationProperties { IsPersistent = false });
+                string profilePicturePath = null;
+                
+                // Handle profile image if uploaded
+                if (ProfileImage != null && ProfileImage.Length > 0)
+                {
+                    // Validate file size (2MB max)
+                    if (ProfileImage.Length > 2 * 1024 * 1024)
+                    {
+                        ModelState.AddModelError("ProfileImage", "Profile picture cannot exceed 2MB");
+                        return Page();
+                    }
+
+                    // Validate file type
+                    var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+                    if (!allowedTypes.Contains(ProfileImage.ContentType.ToLower()))
+                    {
+                        ModelState.AddModelError("ProfileImage", "Only JPG, PNG and GIF files are allowed");
+                        return Page();
+                    }
+
+                    // Generate a unique file name
+                    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfileImage.FileName);
+                    
+                    // Create directories if they don't exist
+                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+                    var profilesFolder = Path.Combine(uploadsFolder, "profiles");
+                    
+                    Directory.CreateDirectory(uploadsFolder);
+                    Directory.CreateDirectory(profilesFolder);
+                    
+                    // Full path where the file will be saved
+                    var filePath = Path.Combine(profilesFolder, uniqueFileName);
+                    
+                    // Save the file
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProfileImage.CopyToAsync(fileStream);
+                    }
+                    
+                    // Set the path to be stored in the database
+                    profilePicturePath = $"/uploads/profiles/{uniqueFileName}";
+                    
+                    _logger.LogInformation("Image saved to: {Path}", filePath);
                 }
                 
-                StatusMessage = "Your profile has been updated successfully.";
-                return RedirectToPage();
+                // Direct database update approach with proper escaping
+                using (var connection = new MySqlConnection(_context.Database.GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    
+                    using (var command = connection.CreateCommand())
+                    {
+                        // Use backticks to escape the User table name
+                        command.CommandText = "UPDATE `User` SET FullName = @name, Bio = @bio";
+                        
+                        if (ProfileImage != null && ProfileImage.Length > 0)
+                        {
+                            command.CommandText += ", ProfilePicture = @pic";
+                            command.Parameters.AddWithValue("@pic", profilePicturePath);
+                        }
+                        
+                        command.CommandText += " WHERE User_id = @userId";
+                        command.Parameters.AddWithValue("@name", UserProfile.FullName);
+                        command.Parameters.AddWithValue("@bio", UserProfile.Bio ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@userId", userId);
+                        
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+                        _logger.LogInformation("Database update result: {Count} rows affected", rowsAffected);
+                        
+                        if (rowsAffected > 0)
+                        {
+                            // Update the authentication cookie if name changed
+                            if (UserProfile.FullName != User.FindFirst(ClaimTypes.Name)?.Value)
+                            {
+                                // Create a completely new ClaimsIdentity with all the claims we want
+                                var claims = new List<Claim>();
+    
+                                // Add the updated name claim
+                                claims.Add(new Claim(ClaimTypes.Name, UserProfile.FullName));
+    
+                                // Copy all other claims except the name claim
+                                foreach (var claim in User.Claims)
+                                {
+                                    if (claim.Type != ClaimTypes.Name)
+                                    {
+                                        claims.Add(claim);
+                                    }
+                                }
+    
+                                // Create a new identity and principal
+                                var newIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                                var newPrincipal = new ClaimsPrincipal(newIdentity);
+    
+                                // Sign in with the new principal
+                                await HttpContext.SignInAsync(
+                                    CookieAuthenticationDefaults.AuthenticationScheme,
+                                    newPrincipal,
+                                    new AuthenticationProperties { IsPersistent = false });
+                            }
+                            
+                            TempData["StatusMessage"] = "Your profile has been updated successfully.";
+                            return RedirectToPage();
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Update failed. Please try again.");
+                            return Page();
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating user profile");
-                ModelState.AddModelError(string.Empty, "An error occurred while updating your profile.");
+                _logger.LogError(ex, "Error updating user profile: {Message}", ex.Message);
+                ModelState.AddModelError(string.Empty, $"Error: {ex.Message}");
+                await OnGetAsync();
                 return Page();
             }
         }
