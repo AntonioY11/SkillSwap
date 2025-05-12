@@ -45,6 +45,44 @@ namespace SkillSwap.Pages.Requests
             }
         }
 
+        public async Task<IActionResult> OnPostCancelRequestAsync(int requestId)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst("UserId")?.Value ?? 
+                    throw new InvalidOperationException("User ID not found"));
+
+                var request = await _context.Requests
+                    .FirstOrDefaultAsync(r => r.Request_id == requestId && r.User_id == userId);
+
+                if (request == null)
+                {
+                    TempData["ErrorMessage"] = "Request not found or you don't have permission to cancel it.";
+                    return RedirectToPage();
+                }
+
+                // Only allow cancellation of pending requests
+                if (request.Status != null)
+                {
+                    TempData["ErrorMessage"] = "Only pending requests can be cancelled.";
+                    return RedirectToPage();
+                }
+
+                _context.Requests.Remove(request);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Request {RequestId} cancelled by user {UserId}", requestId, userId);
+                TempData["SuccessMessage"] = "Your request has been cancelled successfully.";
+                return RedirectToPage();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cancelling request");
+                TempData["ErrorMessage"] = "An error occurred while cancelling your request.";
+                return RedirectToPage();
+            }
+        }
+
         public string GetStatusBadgeClass(bool? status)
         {
             return status switch
