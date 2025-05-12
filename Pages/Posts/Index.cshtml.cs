@@ -36,6 +36,14 @@ namespace SkillSwap.Pages.Posts
         {
             var query = _context.Posts.AsQueryable();
 
+            // Filter out the current user's posts if the user is authenticated
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = int.Parse(User.FindFirst("UserId")?.Value ?? 
+                    throw new InvalidOperationException("User ID not found"));
+                query = query.Where(p => p.User_id != userId);
+            }
+
             // Apply search filter if provided
             if (!string.IsNullOrEmpty(SearchTerm))
             {

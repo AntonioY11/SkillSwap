@@ -23,13 +23,22 @@ namespace SkillSwap.Pages
         {
             try
             {
-                // Try to display some recent posts, but don't crash if DB isn't ready
-                RecentPosts = await _context.Posts
+                var query = _context.Posts
                     .AsNoTracking()  // For performance
                     .Include(p => p.User)
-                    .OrderByDescending(p => p.Post_id)
-                    .Take(5)
-                    .ToListAsync();
+                    .OrderByDescending(p => p.Post_id);
+
+                // Filter out the current user's posts if the user is authenticated
+                if (User.Identity.IsAuthenticated)
+                {
+                    var userId = int.Parse(User.FindFirst("UserId")?.Value ?? 
+                        throw new InvalidOperationException("User ID not found"));
+                    query = query.Where(p => p.User_id != userId)
+                        .OrderByDescending(p => p.Post_id);
+                }
+
+                // Get the 5 most recent posts
+                RecentPosts = await query.Take(5).ToListAsync();
             }
             catch (Exception ex)
             {
