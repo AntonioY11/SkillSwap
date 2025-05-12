@@ -94,3 +94,11 @@ appsettings.*.json
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+# Ensure all environment files are ignored
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
