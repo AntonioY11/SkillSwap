@@ -1,7 +1,9 @@
 # .NET Core build artifacts
 bin/
+**/bin/
 obj/
-obj/*
+**/obj/
+**/obj/*
 *.dll
 *.exe
 *.pdb
@@ -10,6 +12,11 @@ obj/*
 *.userosscache
 *.sln.docstates
 *.userprefs
+
+# Uploads directory - ignore anywhere in the directory structure
+uploads/
+**/uploads/
+**/uploads/**
 
 # Visual Studio files
 .vs/
