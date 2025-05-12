@@ -1,104 +1,32 @@
-# .NET Core build artifacts
+# .NET Core build folders
 bin/
-**/bin/
 obj/
-**/obj/
-**/obj/*
-*.dll
-*.exe
-*.pdb
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-*.userprefs
-
-# Uploads directory - ignore anywhere in the directory structure
-uploads/
-**/uploads/
-**/uploads/**
 
 # Visual Studio files
 .vs/
-.vscode/
-*.nupkg
-*.pfx
-*.snk
-*.vspscc
-*_i.c
-*_p.c
-*.ncb
-*.sdf
-*.opensdf
-*.svd
-*.cache
-*.log
-*.vssscc
-*.vsix
-
-# Rider / JetBrains IDE files
-.idea/
-*.sln.iml
-*.ipr
-*.iws
-
-# Visual Studio Code specific files
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# NuGet
-packages/
-*.nupkg
-*.nuget.props
-*.nuget.targets
-
-# User-specific files
-*.rsuser
-*.suo
 *.user
 *.userosscache
-*.sln.docstates
+*.suo
+*.userprefs
 
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-
-# Entity Framework
-Migrations/
-
-# Configuration files that might contain sensitive data
+# Development settings files
 appsettings.Development.json
 appsettings.*.json
 !appsettings.json
+!appsettings.template.json
 
-# Database files
-*.mdf
-*.ldf
-*.ndf
-*.db
-*.sqlite3
+# Logs
+logs/
+*.log
 
-# OS-specific files
-.DS_Store
-Thumbs.db
+# User-specific files
+*.rsuser
 
-# Ensure all environment files are ignored
+# Images and uploads (if you want to exclude them)
+wwwroot/uploads/*
+!wwwroot/uploads/.gitkeep
+
+# Environment files
 .env
 .env.local
 .env.development
-.env.test
-.env.production
-*.env

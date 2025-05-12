@@ -10,8 +10,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+// Load configuration with environment-specific overrides
+var configuration = builder.Configuration;
+
 // Get connection string
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException(
+        "Database connection string is not configured. " +
+        "Please set the ConnectionStrings:DefaultConnection in appsettings.json " +
+        "or create an appsettings.Development.json file with your connection string."
+    );
+}
 
 // Configure MySQL with correct version specification
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
