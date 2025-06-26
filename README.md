@@ -127,6 +127,10 @@ Open the solution file `SkillSwap.sln` and press F5 to run the application.
 ![User Profile](./screenshots/profile.png)
 *User profile management with personal information and uploaded picture*
 
+### Public User Profile
+![Public User Profile](./screenshots/user_public_profile.png)
+*Public view of a user's profile showing their skills and information*
+
 ### My Posts
 ![My Posts](./screenshots/my_posts.png)
 *Dashboard for managing your skill offerings*
