@@ -122,7 +122,7 @@
                                         </div>
                                     }
                                 </div>
-                                <small class="text-muted">Posted by @(post.User?.FullName ?? "Unknown")</small>
+                                <small class="text-muted">Posted by <a asp-page="/Users/PublicProfile" asp-route-id="@post.User_id">@(post.User?.FullName ?? "Unknown")</a></small>
                             </div>
                             <a asp-page="./Details" asp-route-id="@post.Post_id" class="btn btn-sm btn-outline-primary">View Details</a>
                         </div>

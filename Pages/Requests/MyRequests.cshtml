@@ -40,7 +40,7 @@
                                             @request.Post.Title
                                         </a>
                                     </td>
-                                    <td>@request.Post.User?.FullName</td>
+                                    <td><a asp-page="/Users/PublicProfile" asp-route-id="@request.Post.User_id">@request.Post.User?.FullName</a></td>
                                     <td>
                                         @if (request.Comment?.Length > 50)
                                         {

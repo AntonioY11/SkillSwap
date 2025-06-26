@@ -21,35 +21,39 @@
                     <div class="list-group">
                         @foreach (var post in Model.RecentPosts)
                         {
-                            <a href="/Posts/Details?id=@post.Post_id" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">@post.Title</h5>
-                                </div>
-                                <p class="mb-1">
-                                    @if (!string.IsNullOrEmpty(post.Description))
-                                    {
-                                        @(post.Description.Length > 100 ? post.Description.Substring(0, 100) + "..." : post.Description)
-                                    }
-                                </p>
-                                <div class="d-flex align-items-center">
-                                    <div style="width: 20px; height: 20px; margin-right: 8px;">
-                                        @if (!string.IsNullOrEmpty(post.User?.ProfilePicture))
-                                        {
-                                            <img src="@post.User.ProfilePicture" 
-                                                 class="rounded-circle w-100 h-100" 
-                                                 style="object-fit: cover;" 
-                                                 alt="@post.User.FullName" />
-                                        }
-                                        else
-                                        {
-                                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center w-100 h-100" style="font-size: 10px;">
-                                                <span>@(post.User?.FullName.Substring(0, 1).ToUpper() ?? "?")</span>
-                                            </div>
-                                        }
+                            <div class="list-group-item">
+                                <!-- Post content (clickable) -->
+                                <a href="/Posts/Details?id=@post.Post_id" class="text-decoration-none text-dark">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">@post.Title</h5>
                                     </div>
-                                    <small>By @(post.User?.FullName ?? "Unknown")</small>
+                                    <p class="mb-1">
+                                        @if (!string.IsNullOrEmpty(post.Description))
+                                        {
+                                            @(post.Description.Length > 100 ? post.Description.Substring(0, 100) + "..." : post.Description)
+                                        }
+                                    </p>
+                                </a>
+                                
+                                <!-- User profile display (separate from post link) -->
+                                <div class="d-flex align-items-center mt-2 border-top pt-2">
+                                    <a asp-page="/Users/PublicProfile" asp-route-id="@post.User_id" class="d-flex align-items-center text-decoration-none">
+                                        <div style="width: 24px; height: 24px;" class="me-1">
+                                            @if (!string.IsNullOrEmpty(post.User?.ProfilePicture))
+                                            {
+                                                <img src="@post.User.ProfilePicture" class="rounded-circle w-100 h-100" style="object-fit: cover;" alt="@post.User?.FullName" />
+                                            }
+                                            else
+                                            {
+                                                <div class="rounded-circle d-flex justify-content-center align-items-center bg-primary text-white w-100 h-100" style="font-size: 10px;">
+                                                    @(post.User?.FullName != null ? post.User.FullName.Substring(0, 1).ToUpper() : "?")
+                                                </div>
+                                            }
+                                        </div>
+                                        <small class="text-muted ms-1">By @post.User?.FullName</small>
+                                    </a>
                                 </div>
-                            </a>
+                            </div>
                         }
                     </div>
                 }
