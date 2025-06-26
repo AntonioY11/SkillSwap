@@ -39,7 +39,32 @@
                             @foreach (var request in Model.Requests)
                             {
                                 <tr>
-                                    <td>@request.User.FullName</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div style="width: 32px; height: 32px;" class="me-2">
+                                                @if (!string.IsNullOrEmpty(request.User?.ProfilePicture))
+                                                {
+                                                    <a asp-page="/Users/PublicProfile" asp-route-id="@request.User_id">
+                                                        <img src="@request.User.ProfilePicture" 
+                                                             class="rounded-circle w-100 h-100" 
+                                                             style="object-fit: cover;" 
+                                                             alt="@request.User.FullName" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-page="/Users/PublicProfile" asp-route-id="@request.User_id">
+                                                        <div class="rounded-circle d-flex justify-content-center align-items-center bg-primary text-white w-100 h-100" style="font-size: 14px;">
+                                                            @(request.User?.FullName != null ? request.User.FullName.Substring(0, 1).ToUpper() : "?")
+                                                        </div>
+                                                    </a>
+                                                }
+                                            </div>
+                                            <a asp-page="/Users/PublicProfile" asp-route-id="@request.User_id">
+                                                @request.User.FullName
+                                            </a>
+                                        </div>
+                                    </td>
                                     <td>@request.User.Email</td>
                                     <td>
                                         @if (request.Comment?.Length > 50)
@@ -64,7 +89,7 @@
                                     <td>
                                         @if (request.Status == null)
                                         {
-                                            <div class="btn-group">
+                                            <div class="d-flex">
                                                 <form method="post" asp-page-handler="UpdateStatus" 
                                                       asp-route-requestId="@request.Request_id" 
                                                       asp-route-status="true" class="me-2">
@@ -95,7 +120,24 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Message from <a asp-page="/Users/PublicProfile" asp-route-id="@request.User_id">@request.User.FullName</a></h5>
+                                    <div class="d-flex align-items-center">
+                                        <div style="width: 32px; height: 32px;" class="me-2">
+                                            @if (!string.IsNullOrEmpty(request.User?.ProfilePicture))
+                                            {
+                                                <img src="@request.User.ProfilePicture" 
+                                                     class="rounded-circle w-100 h-100" 
+                                                     style="object-fit: cover;" 
+                                                     alt="@request.User.FullName" />
+                                            }
+                                            else
+                                            {
+                                                <div class="rounded-circle d-flex justify-content-center align-items-center bg-primary text-white w-100 h-100" style="font-size: 14px;">
+                                                    @(request.User?.FullName != null ? request.User.FullName.Substring(0, 1).ToUpper() : "?")
+                                                </div>
+                                            }
+                                        </div>
+                                        <h5 class="modal-title mb-0">Message from <a asp-page="/Users/PublicProfile" asp-route-id="@request.User_id">@request.User.FullName</a></h5>
+                                    </div>
                                     <button type="button" class="btn-close" 
                                             data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
